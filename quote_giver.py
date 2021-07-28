@@ -2,7 +2,7 @@
 
 
 import random  #for picking a random element in a list
-
+import json    #in order to stock the lists in external files
 
 
 
@@ -14,18 +14,42 @@ import random  #for picking a random element in a list
 
 
 
-######################################    DATA LISTS  ################################################
+######################################    GLOBAL VARIABLES  ################################################
 
 
 
-characters_list = ["persoa", "persob", "persoc"] #list of characters
-
-quotes_list = ["a","b","c", "d", "e"] #list of quotes
-
-info_dump = {"characters": characters_list, "quotes" : quotes_list} #dictionnary with both lists
+info_dump = {} #dictionnary with both lists
 
 
-################################  FUNCTION ###########################################
+################################  FUNCTIONS ###########################################
+
+
+
+#read json file and take a list from it
+
+def take_list_from_file(path, key):
+    extracted_list = []
+    with open(path) as f:
+        data = json.load(f)
+        for entry in data:
+            extracted_list.append(entry[key])
+    return extracted_list
+
+
+
+#takes the quotes and the characters in the .json files and creates a dictionnary with both lists
+def gather_data():
+
+    characters_list = take_list_from_file("characters.json", "character")
+    quotes_list = take_list_from_file("quotes.json", "quote")
+    global info_dump
+    info_dump = {"characters": characters_list, "quotes": quotes_list}    #change global variable info_dump to create a dictionnary with both lists
+    
+
+
+
+
+
 
 #take a list from the dictionnary and return a random item from this list
 
@@ -61,7 +85,7 @@ def sentence():
 
 # principal program that print a quote as long as the user doesn't press B. When he does the program is over.
 def program():
-    
+    gather_data()             #takes the data from the json files and put them in the dictionnary info_dump (global variable)
     #program loop, runs while the user doesn't press b
     while 1: # while 1 faster than while true
         print(sentence())
@@ -76,7 +100,7 @@ def program():
 
 ###########################  EXECUTION ############################################
 
-#prevent the program from being called if quote_giver.py is imported in another *.py
-if __name__ == '__main__':
+
+if __name__ == '__main__':     #prevent the program from being called if quote_giver.py is imported in another *.py
     program()
   
